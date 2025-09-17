@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/images/ykk-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YKK Shop</title>
+  </head>
+  <body>
+    <!-- Lottie loader kaplaması: JS ilk yüklemede bu kutuya lottie ekler -->
+    <div id="app-loader" class="app-loader">
+      <div class="loader-inner">
+        <div id="lottie-slot"></div>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script>
+      // Dev ortamında (localhost) 5173 üzerinde eski Service Worker ve cache'leri temizle
+      (async () => {
+        try {
+          const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+          if (isLocal) {
+            if ('serviceWorker' in navigator) {
+              const regs = await navigator.serviceWorker.getRegistrations();
+              for (const r of regs) {
+                try { await r.unregister(); } catch (_) {}
+              }
+            }
+            if (window.caches && caches.keys) {
+              const keys = await caches.keys();
+              for (const k of keys) {
+                try { await caches.delete(k); } catch (_) {}
+              }
+            }
+          }
+        } catch (_) {}
+      })();
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
